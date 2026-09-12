@@ -1,0 +1,508 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>أنمي ووتش — مشغّل أنمي شخصي</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@400;500;700;800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/artplayer@5.2.1/dist/artplayer.css">
+<style>
+:root{
+  --bg:#0b0e14; --surface:#121722; --surface2:#1a2130; --border:#232c3f;
+  --text:#e8ecf4; --muted:#8b94a7;
+  --accent:#7c5cff; --accent2:#00d4ff;
+  --watched:#22c55e;
+  --radius:14px;
+}
+*{margin:0;padding:0;box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{background:var(--bg);color:var(--text);font-family:'Tajawal',system-ui,sans-serif;min-height:100vh}
+.muted{color:var(--muted)}
+.container{max-width:1200px;margin:0 auto;padding:0 16px}
+
+/* ===== الهيدر ===== */
+header{position:sticky;top:0;z-index:50;background:rgba(11,14,20,.85);backdrop-filter:blur(12px);border-bottom:1px solid var(--border)}
+.header-inner{max-width:1200px;margin:0 auto;padding:14px 16px;display:flex;align-items:center;gap:12px}
+.brand{font-size:22px;font-weight:800;background:linear-gradient(90deg,var(--accent),var(--accent2));-webkit-background-clip:text;background-clip:text;color:transparent;white-space:nowrap}
+.header-inner small{color:var(--muted);font-size:12px}
+
+/* ===== أكمل المشاهدة ===== */
+.continue{padding:18px 0 0}
+.continue h3{font-size:16px;margin-bottom:10px}
+#continueRow{display:flex;gap:10px;overflow-x:auto;padding-bottom:8px;scrollbar-width:thin}
+.cw-card{flex:0 0 250px;display:flex;gap:10px;background:var(--surface);border:1px solid var(--border);border-radius:12px;padding:8px;cursor:pointer;transition:border-color .2s}
+.cw-card:hover{border-color:var(--accent)}
+.cw-card img{width:48px;height:64px;object-fit:cover;border-radius:8px;flex-shrink:0}
+.cw-info{display:flex;flex-direction:column;gap:4px;font-size:12px;min-width:0}
+.cw-info strong{font-size:13px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.cw-bar{height:3px;background:var(--surface2);border-radius:99px;overflow:hidden;margin-top:auto}
+.cw-bar i{display:block;height:100%;background:linear-gradient(90deg,var(--accent),var(--accent2))}
+
+/* ===== المشغل ===== */
+.player-section{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);padding:16px;margin:18px 0}
+.player-head{display:flex;justify-content:space-between;align-items:flex-start;gap:12px;flex-wrap:wrap;margin-bottom:12px}
+.player-head h2{font-size:19px}
+.player-head p{font-size:13px;margin-top:2px}
+.mode-toggle{display:flex;background:var(--surface2);border:1px solid var(--border);border-radius:99px;padding:4px;gap:4px}
+.mode{border:0;background:transparent;color:var(--muted);font-family:inherit;font-size:13px;font-weight:700;padding:7px 16px;border-radius:99px;cursor:pointer;transition:.2s}
+.mode.active{background:linear-gradient(90deg,var(--accent),var(--accent2));color:#fff}
+.mode:disabled{opacity:.35;cursor:not-allowed}
+.player-wrap{position:relative;aspect-ratio:16/9;background:#000;border-radius:12px;overflow:hidden}
+#artplayer{width:100%;height:100%}
+#embedFrame{width:100%;height:100%;border:0}
+.player-bar{display:flex;align-items:center;gap:10px;flex-wrap:wrap;margin:12px 0}
+.btn{background:var(--surface2);border:1px solid var(--border);color:var(--text);font-family:inherit;font-size:13px;font-weight:700;padding:9px 18px;border-radius:99px;cursor:pointer;transition:.2s}
+.btn:hover{border-color:var(--accent)}
+.btn:disabled{opacity:.4;cursor:not-allowed}
+.btn.primary{background:linear-gradient(90deg,var(--accent),var(--accent2));border:0;color:#fff}
+.btn.done{background:rgba(34,197,94,.15);border-color:rgba(34,197,94,.5);color:var(--watched)}
+#progressInfo{font-size:12px;color:var(--muted)}
+
+/* ===== الحلقات ===== */
+.episodes{display:grid;grid-template-columns:repeat(auto-fill,minmax(56px,1fr));gap:8px;max-height:270px;overflow-y:auto;padding:4px;scrollbar-width:thin}
+.ep-btn{position:relative;padding:9px 0;background:var(--surface2);border:1px solid var(--border);border-radius:9px;color:var(--text);font-family:inherit;font-size:13px;font-weight:700;cursor:pointer;transition:.15s}
+.ep-btn:hover{border-color:var(--accent)}
+.ep-btn.active{background:linear-gradient(90deg,var(--accent),var(--accent2));border-color:transparent;color:#fff}
+.ep-btn.watched{color:var(--watched);border-color:rgba(34,197,94,.45)}
+.ep-btn.watched::after{content:'✓';position:absolute;top:1px;inset-inline-end:4px;font-size:9px}
+.load-more{grid-column:1/-1;padding:10px;background:transparent;border:1px dashed var(--border);border-radius:9px;color:var(--muted);font-family:inherit;font-size:13px;cursor:pointer}
+.load-more:hover{color:var(--text);border-color:var(--accent)}
+
+/* ===== البحث ===== */
+.search-box{display:flex;align-items:center;gap:10px;background:var(--surface);border:1px solid var(--border);border-radius:99px;padding:12px 18px;margin:22px 0 14px;transition:border-color .2s}
+.search-box:focus-within{border-color:var(--accent)}
+.search-box svg{flex-shrink:0;stroke:var(--muted)}
+.search-box input{flex:1;background:transparent;border:0;outline:0;color:var(--text);font-family:inherit;font-size:15px}
+.search-box input::placeholder{color:var(--muted)}
+.status{text-align:center;color:var(--muted);padding:30px 0;font-size:14px}
+
+/* ===== شبكة الكروت ===== */
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(165px,1fr));gap:16px;padding-bottom:40px}
+.card{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);overflow:hidden;cursor:pointer;transition:transform .2s,border-color .2s,box-shadow .2s}
+.card:hover{transform:translateY(-5px);border-color:var(--accent);box-shadow:0 12px 30px rgba(0,0,0,.45)}
+.card-poster{position:relative;aspect-ratio:2/3;background:var(--surface2)}
+.card-poster img{width:100%;height:100%;object-fit:cover;display:block}
+.badge{position:absolute;font-size:11px;font-weight:700;padding:3px 8px;border-radius:99px;background:rgba(0,0,0,.75);backdrop-filter:blur(4px)}
+.badge.score{top:8px;inset-inline-start:8px;color:#ffd166}
+.badge.eps{bottom:8px;inset-inline-start:8px;color:var(--accent2)}
+.card-body{padding:10px 12px}
+.card-body h3{font-size:14px;font-weight:700;line-height:1.5;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden;min-height:42px}
+
+footer{text-align:center;color:var(--muted);font-size:12px;padding:24px 16px;border-top:1px solid var(--border)}
+
+@media (max-width:640px){
+  .grid{grid-template-columns:repeat(auto-fill,minmax(120px,1fr));gap:10px}
+  .card-body h3{font-size:12px;min-height:36px}
+  .player-head{flex-direction:column}
+  .player-section{padding:12px}
+  .brand{font-size:19px}
+}
+</style>
+</head>
+<body>
+
+<header>
+  <div class="header-inner">
+    <span class="brand">أنمي ووتش</span>
+    <small>مشغّل شخصي — بيانات AniList عبر API محلي</small>
+  </div>
+</header>
+
+<div class="container">
+
+  <!-- أكمل المشاهدة -->
+  <section id="continueSection" class="continue" hidden>
+    <h3>أكمل المشاهدة</h3>
+    <div id="continueRow"></div>
+  </section>
+
+  <!-- قسم المشغل -->
+  <section id="playerSection" class="player-section" hidden>
+    <div class="player-head">
+      <div>
+        <h2 id="pTitle"></h2>
+        <p id="pMeta" class="muted"></p>
+      </div>
+      <div class="mode-toggle">
+        <button id="btnDirect" class="mode active">مشغّل مباشر</button>
+        <button id="btnEmbed" class="mode">تضمين خارجي</button>
+      </div>
+    </div>
+
+    <div class="player-wrap" dir="ltr">
+      <div id="artplayer"></div>
+      <iframe id="embedFrame" hidden allowfullscreen sandbox="allow-scripts allow-same-origin allow-forms allow-presentation"
+              allow="autoplay; fullscreen; encrypted-media; picture-in-picture" referrerpolicy="no-referrer"></iframe>
+    </div>
+
+    <div class="player-bar">
+      <button id="btnWatched" class="btn">✓ تعيين كمشاهدة</button>
+      <button id="btnNext" class="btn primary">الحلقة التالية ←</button>
+      <span id="progressInfo"></span>
+    </div>
+
+    <div id="episodes" class="episodes"></div>
+  </section>
+
+  <!-- البحث -->
+  <div class="search-box">
+    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.3-4.3"/></svg>
+    <input id="searchInput" type="text" placeholder="ابحث عن أنمي… (مثال: One Piece)" autocomplete="off">
+  </div>
+  <div id="status" class="status" hidden></div>
+  <div id="grid" class="grid"></div>
+
+</div>
+
+<footer>يعمل محلياً ببيانات AniList — التخزين كله في متصفحك (LocalStorage)</footer>
+
+<script src="https://cdn.jsdelivr.net/npm/artplayer@5.2.1/dist/artplayer.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/hls.js@1.5.13/dist/hls.min.js"></script>
+<script>
+const $ = s => document.querySelector(s);
+const esc = s => { const d = document.createElement('div'); d.textContent = String(s ?? ''); return d.innerHTML; };
+const fmt = t => { t = Math.floor(t || 0); return Math.floor(t/60) + ':' + String(t%60).padStart(2,'0'); };
+const titleOf = a => typeof a.title === 'string' ? a.title : (a.title?.english || a.title?.romaji || 'بدون عنوان');
+
+const LS = {
+  watched: id => `aw_watched_${id}`,
+  progress: 'aw_progress',
+  last: 'aw_last'
+};
+
+let state = { anime: null, ep: null, mode: 'direct', stream: null };
+let art = null, hls = null, lastSave = 0;
+const EP_CHUNK = 200;
+
+/* ============================================================
+   1) مصادر البث — عدّل هذه الدالة عند جاهزية api/episode.js
+   ============================================================ */
+async function resolveStream(anime, ep) {
+  // الخيار المستقبلي (عند بناء api/episode.js):
+  // const r = await fetch(`/api/episode?id=${anime.id}&ep=${ep}`);
+  // return await r.json(); // {url, type:'m3u8'|'mp4', embedUrl, subtitles:[{url,type,label}]}
+  return {
+    url: 'https://test-streams.mux.dev/x36xhzz/x36xhzz.m3u8', // بث تجريبي قانوني
+    type: 'm3u8',
+    embedUrl: null,
+    subtitles: []
+  };
+}
+
+/* ============================================================
+   2) البحث — مربوط تلقائياً بـ /api/search
+   ============================================================ */
+let debounce;
+$('#searchInput').addEventListener('input', e => {
+  clearTimeout(debounce);
+  const q = e.target.value.trim();
+  debounce = setTimeout(() => runSearch(q), 400);
+});
+
+async function runSearch(q) {
+  const status = $('#status'), grid = $('#grid');
+  if (!q) { status.hidden = true; grid.innerHTML = ''; return; }
+  status.hidden = false; status.textContent = 'جارٍ البحث…'; grid.innerHTML = '';
+  try {
+    const r = await fetch(`/api/search?q=${encodeURIComponent(q)}`);
+    if (!r.ok) throw new Error('HTTP ' + r.status);
+    const list = await r.json();
+    if (!list.length) { status.textContent = 'لا توجد نتائج مطابقة.'; return; }
+    status.hidden = true;
+    renderGrid(list);
+  } catch (e) {
+    status.textContent = 'تعذّر الاتصال بالخادم — تأكد أن دالة /api/search تعمل على Vercel.';
+  }
+}
+
+function renderGrid(list) {
+  $('#grid').innerHTML = list.map(a => `
+    <article class="card">
+      <div class="card-poster">
+        <img loading="lazy" src="${a.coverImage?.large || ''}" alt=""
+             onerror="this.onerror=null;this.src='https://placehold.co/230x320/1a2130/8b94a7?text=No+Image'">
+        ${a.averageScore ? `<span class="badge score">★ ${(a.averageScore/10).toFixed(1)}</span>` : ''}
+        ${a.episodes ? `<span class="badge eps">${a.episodes} حلقة</span>` : ''}
+      </div>
+      <div class="card-body"><h3>${esc(titleOf(a))}</h3></div>
+    </article>`).join('');
+  document.querySelectorAll('.card').forEach((el, i) =>
+    el.addEventListener('click', () => selectAnime(list[i])));
+}
+
+/* ============================================================
+   3) اختيار الأنمي + أزرار الحلقات
+   ============================================================ */
+async function selectAnime(anime, ep = 1, soft = false) {
+  state.anime = anime;
+  $('#playerSection').hidden = false;
+  $('#pTitle').textContent = titleOf(anime);
+  $('#pMeta').textContent = anime.episodes ? `${anime.episodes} حلقة` : 'عدد الحلقات غير معروف';
+  renderEpisodes();
+  await loadEpisode(ep, soft);
+  saveLast();
+  $('#playerSection').scrollIntoView({ behavior: 'smooth', block: 'start' });
+}
+
+function renderEpisodes() {
+  const wrap = $('#episodes');
+  wrap.innerHTML = '';
+  const total = state.anime.episodes || 1;
+  const watched = getWatched(state.anime.id);
+  let shown = 0;
+
+  const addChunk = () => {
+    const end = Math.min(shown + EP_CHUNK, total);
+    for (let i = shown + 1; i <= end; i++) wrap.appendChild(makeEpBtn(i, watched.has(i)));
+    shown = end;
+    const old = $('#loadMore');
+    if (old) old.remove();
+    if (shown < total) {
+      const b = document.createElement('button');
+      b.id = 'loadMore'; b.className = 'load-more';
+      b.textContent = `عرض المزيد (${total - shown} متبقية)`;
+      b.addEventListener('click', addChunk);
+      wrap.appendChild(b);
+    }
+  };
+  addChunk();
+}
+
+function makeEpBtn(i, watched) {
+  const b = document.createElement('button');
+  b.className = 'ep-btn';
+  b.textContent = i;
+  b.dataset.ep = i;
+  if (watched) b.classList.add('watched');
+  if (i === state.ep) b.classList.add('active');
+  b.addEventListener('click', () => loadEpisode(i));
+  return b;
+}
+
+function updateEpButtons() {
+  document.querySelectorAll('.ep-btn').forEach(b => {
+    const i = Number(b.dataset.ep);
+    b.classList.toggle('active', i === state.ep);
+    b.classList.toggle('watched', getWatched(state.anime.id).has(i));
+  });
+}
+
+/* ============================================================
+   4) تحميل الحلقة — مباشر (Artplayer) أو تضمين (iframe)
+   ============================================================ */
+async function loadEpisode(ep, soft = false) {
+  if (!state.anime) return;
+  state.ep = ep;
+  $('#progressInfo').textContent = 'جارٍ تحميل المصدر…';
+  state.stream = await resolveStream(state.anime, ep);
+
+  if (state.mode === 'embed' && state.stream.embedUrl) {
+    showEmbed(state.stream.embedUrl);
+  } else {
+    if (state.mode === 'embed') setMode('direct', true);
+    showDirect(state.stream, soft);
+  }
+  updateEpButtons();
+  updatePlayerBar();
+  saveLast();
+}
+
+function showDirect(stream, soft) {
+  destroyPlayer();
+  $('#artplayer').hidden = false;
+  $('#embedFrame').hidden = true;
+
+  const opt = {
+    container: '#artplayer',
+    url: stream.url,
+    type: stream.type || 'm3u8',
+    autoplay: true,
+    muted: !!soft,
+    customType: { m3u8: playHls },
+  };
+  if (stream.subtitles?.length) {
+    opt.subtitle = {
+      url: stream.subtitles[0].url,
+      type: stream.subtitles[0].type || 'vtt',
+      encoding: 'utf-8',
+      bilingual: true,
+      style: { color: '#fff', fontSize: '22px', textShadow: '0 2px 4px #000' }
+    };
+  }
+  art = new Artplayer(opt);
+
+  art.on('ready', () => {
+    const p = getProgress(state.anime.id, state.ep);
+    if (p && p.t > 8 && p.d && p.t < p.d * 0.95) {
+      art.seek(p.t);
+      art.notice('تم الاستئناف من ' + fmt(p.t));
+    }
+  });
+
+  art.video.addEventListener('timeupdate', () => {
+    const now = Date.now();
+    if (now - lastSave > 4000) { lastSave = now; saveProgress(); }
+    const d = art.duration;
+    if (d && art.currentTime / d > 0.92) markWatched(state.anime.id, state.ep, false);
+  });
+
+  art.video.addEventListener('ended', () => {
+    markWatched(state.anime.id, state.ep);
+    const total = state.anime.episodes || 1;
+    if (state.ep < total) {
+      art.notice('الانتقال للحلقة التالية…');
+      setTimeout(() => loadEpisode(state.ep + 1), 900);
+    }
+  });
+}
+
+function playHls(video, url) {
+  if (Hls.isSupported()) {
+    hls = new Hls({ maxBufferLength: 30 });
+    hls.loadSource(url);
+    hls.attachMedia(video);
+  } else {
+    video.src = url; // Safari يدعم HLS أصلاً
+  }
+}
+
+function showEmbed(url) {
+  destroyPlayer();
+  $('#artplayer').hidden = true;
+  const f = $('#embedFrame');
+  f.hidden = false;
+  f.src = url;
+}
+
+function destroyPlayer() {
+  if (art) { try { art.destroy(true); } catch(e) {} art = null; }
+  if (hls) { try { hls.destroy(); } catch(e) {} hls = null; }
+}
+
+/* ============================================================
+   5) التبديل بين الوضعين
+   ============================================================ */
+function setMode(mode, silent) {
+  state.mode = mode;
+  $('#btnDirect').classList.toggle('active', mode === 'direct');
+  $('#btnEmbed').classList.toggle('active', mode === 'embed');
+  if (silent || !state.stream) return;
+  if (mode === 'embed' && state.stream.embedUrl) showEmbed(state.stream.embedUrl);
+  else showDirect(state.stream);
+}
+$('#btnDirect').addEventListener('click', () => setMode('direct'));
+$('#btnEmbed').addEventListener('click', () => setMode('embed'));
+
+/* ============================================================
+   6) LocalStorage — مشاهَد + استئناف التوقيت
+   ============================================================ */
+function getWatched(id) {
+  try { return new Set(JSON.parse(localStorage.getItem(LS.watched(id))) || []); }
+  catch(e) { return new Set(); }
+}
+
+function markWatched(id, ep, rerender = true) {
+  const s = getWatched(id);
+  if (s.has(ep)) return;
+  s.add(ep);
+  localStorage.setItem(LS.watched(id), JSON.stringify([...s]));
+  const store = getProgressStore();
+  delete store[`${id}_${ep}`];
+  localStorage.setItem(LS.progress, JSON.stringify(store));
+  if (rerender) { updateEpButtons(); updatePlayerBar(); }
+  renderContinue();
+}
+
+function getProgressStore() {
+  try { return JSON.parse(localStorage.getItem(LS.progress)) || {}; }
+  catch(e) { return {}; }
+}
+
+function saveProgress() {
+  if (!state.anime || !art || !art.duration) return;
+  const t = art.currentTime, d = art.duration;
+  if (!t) return;
+  const store = getProgressStore();
+  store[`${state.anime.id}_${state.ep}`] = {
+    id: state.anime.id, ep: state.ep,
+    title: titleOf(state.anime),
+    poster: state.anime.coverImage?.large || '',
+    episodes: state.anime.episodes || 0,
+    t, d, updated: Date.now()
+  };
+  localStorage.setItem(LS.progress, JSON.stringify(store));
+  $('#progressInfo').textContent = `توقّف عند ${fmt(t)} / ${fmt(d)}`;
+  renderContinue();
+}
+
+function getProgress(id, ep) { return getProgressStore()[`${id}_${ep}`]; }
+
+function saveLast() {
+  if (!state.anime) return;
+  localStorage.setItem(LS.last, JSON.stringify({
+    id: state.anime.id,
+    ep: state.ep,
+    title: { romaji: titleOf(state.anime) },
+    episodes: state.anime.episodes || 0,
+    coverImage: { large: state.anime.coverImage?.large || '' }
+  }));
+}
+
+/* أكمل المشاهدة */
+function renderContinue() {
+  const items = Object.values(getProgressStore())
+    .filter(v => v.d && v.t > 20 && v.t < v.d * 0.95)
+    .sort((a, b) => b.updated - a.updated)
+    .slice(0, 10);
+  const sec = $('#continueSection');
+  if (!items.length) { sec.hidden = true; return; }
+  sec.hidden = false;
+  $('#continueRow').innerHTML = items.map(v => `
+    <div class="cw-card" data-id="${v.id}" data-ep="${v.ep}">
+      <img src="${esc(v.poster)}" alt="" onerror="this.style.display='none'">
+      <div class="cw-info">
+        <strong>${esc(v.title)}</strong>
+        <span class="muted">الحلقة ${v.ep} — ${Math.round(v.t/v.d*100)}%</span>
+        <div class="cw-bar"><i style="width:${Math.min(100, v.t/v.d*100)}%"></i></div>
+      </div>
+    </div>`).join('');
+  document.querySelectorAll('.cw-card').forEach(el =>
+    el.addEventListener('click', () => {
+      const v = items.find(x => String(x.id) === el.dataset.id && String(x.ep) === el.dataset.ep);
+      if (v) selectAnime({ id: v.id, title: { romaji: v.title }, episodes: v.episodes, coverImage: { large: v.poster } }, v.ep, true);
+    }));
+}
+
+/* ============================================================
+   7) أزرار الشريط السفلي
+   ============================================================ */
+function updatePlayerBar() {
+  const total = state.anime?.episodes || 1;
+  const watched = state.anime && getWatched(state.anime.id).has(state.ep);
+  const bw = $('#btnWatched');
+  bw.disabled = !!watched;
+  bw.textContent = watched ? '✓ تمت مشاهدتها' : '✓ تعيين كمشاهدة';
+  bw.classList.toggle('done', !!watched);
+  $('#btnNext').disabled = state.ep >= total;
+  $('#btnEmbed').disabled = !(state.stream && state.stream.embedUrl);
+  $('#pMeta').textContent = `${state.anime?.episodes || '?'} حلقة — أنت تشاهد: الحلقة ${state.ep}`;
+}
+$('#btnWatched').addEventListener('click', () => state.anime && markWatched(state.anime.id, state.ep));
+$('#btnNext').addEventListener('click', () => state.ep < (state.anime.episodes || 1) && loadEpisode(state.ep + 1));
+
+window.addEventListener('beforeunload', saveProgress);
+
+/* ============================================================
+   8) استعادة آخر مشاهدة عند فتح الموقع
+   ============================================================ */
+window.addEventListener('DOMContentLoaded', () => {
+  renderContinue();
+  try {
+    const last = JSON.parse(localStorage.getItem(LS.last) || 'null');
+    if (last?.id) selectAnime(last, last.ep || 1, true); // soft: بدون صوت تجاوزاً لحظر التشغيل التلقائي
+  } catch(e) {}
+});
+</script>
+</body>
+</html>
