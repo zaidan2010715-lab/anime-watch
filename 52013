@@ -1,0 +1,11 @@
+{
+  "name": "anime-watch",
+  "version": "1.0.0",
+  "private": true,
+  "description": "مشغّل أنمي شخصي — Static Frontend + Vercel Serverless Functions",
+  "type": "module",
+  "scripts": {
+    "dev": "vercel dev",
+    "deploy": "vercel --prod"
+  }
+}
