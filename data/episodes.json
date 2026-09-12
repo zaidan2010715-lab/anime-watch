@@ -2,19 +2,19 @@
   "subtitles": [],
   "templates": [
     {
-      "name": "سيرفر الأنمي 1 (embed.su)",
+      "name": "سيرفر الأنمي (AutoEmbed) الأسرع",
       "type": "embed",
-      "url": "https://embed.su/embed/anime/{id}/{ep}"
+      "url": "https://tom.autoembed.cc/anime/{mal}/{ep}"
     },
     {
-      "name": "سيرفر الأنمي 2 (بديل MAL)",
+      "name": "سيرفر الأنمي (VidSrc.to)",
       "type": "embed",
-      "url": "https://2embed.cc/embed/anime/{id}/{ep}"
+      "url": "https://vidsrc.to/embed/anime/{mal}/{ep}"
     },
     {
-      "name": "سيرفر بحث بالاسم (تلقائي)",
+      "name": "سيرفر الأنمي (Vidsrc.cc)",
       "type": "embed",
-      "url": "https://multiembed.mov/?video_id={id}&an=1&s=1&e={ep}"
+      "url": "https://vidsrc.cc/v2/embed/anime/{mal}/{ep}"
     }
   ],
   "anime": {}
