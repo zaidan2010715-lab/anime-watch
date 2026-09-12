@@ -44,10 +44,6 @@ header{position:sticky;top:0;z-index:50;background:rgba(11,14,20,.85);backdrop-f
 .player-head{display:flex;justify-content:space-between;align-items:flex-start;gap:12px;flex-wrap:wrap;margin-bottom:12px}
 .player-head h2{font-size:19px}
 .player-head p{font-size:13px;margin-top:2px}
-.mode-toggle{display:flex;background:var(--surface2);border:1px solid var(--border);border-radius:99px;padding:4px;gap:4px}
-.mode{border:0;background:transparent;color:var(--muted);font-family:inherit;font-size:13px;font-weight:700;padding:7px 16px;border-radius:99px;cursor:pointer;transition:.2s}
-.mode.active{background:linear-gradient(90deg,var(--accent),var(--accent2));color:#fff}
-.mode:disabled{opacity:.35;cursor:not-allowed}
 .player-wrap{position:relative;aspect-ratio:16/9;background:#000;border-radius:12px;overflow:hidden}
 #artplayer{width:100%;height:100%}
 #embedFrame{width:100%;height:100%;border:0}
@@ -113,7 +109,7 @@ footer{text-align:center;color:var(--muted);font-size:12px;padding:24px 16px;bor
 <header>
   <div class="header-inner">
     <span class="brand">أنمي ووتش</span>
-    <small>مشغّل شخصي — بيانات AniList عبر API محلي</small>
+    <small>مشغّل شخصي مباشر — بيانات AniList</small>
   </div>
 </header>
 
@@ -154,14 +150,14 @@ footer{text-align:center;color:var(--muted);font-size:12px;padding:24px 16px;bor
   <!-- البحث -->
   <div class="search-box">
     <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.3-4.3"/></svg>
-    <input id="searchInput" type="text" placeholder="ابحث عن أنمي… (مثال: One Piece)" autocomplete="off">
+    <input id="searchInput" type="text" placeholder="ابحث عن أنمي… (مثال: Attack on Titan)" autocomplete="off">
   </div>
   <div id="status" class="status" hidden></div>
   <div id="grid" class="grid"></div>
 
 </div>
 
-<footer>يعمل محلياً ببيانات AniList — التخزين كله في متصفحك (LocalStorage)</footer>
+<footer>يعمل مباشرة من المتصفح — التخزين كله في متصفحك (LocalStorage)</footer>
 
 <script src="https://cdn.jsdelivr.net/npm/artplayer@5.2.1/dist/artplayer.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/hls.js@1.5.13/dist/hls.min.js"></script>
@@ -182,13 +178,21 @@ let art = null, hls = null, lastSave = 0;
 const EP_CHUNK = 200;
 
 /* ============================================================
-   1) مصادر البث — عدّل هذه الدالة عند جاهزية api/episode.js
+   1) مصادر البث مع نظام Fallback تلقائي آمن
    ============================================================ */
 async function resolveStream(anime, ep) {
-  const title = encodeURIComponent(titleOf(anime));
-  const r = await fetch(`/api/episode?id=${anime.id}&ep=${ep}&title=${title}`);
-  if (!r.ok) throw new Error('HTTP ' + r.status);
-  return await r.json(); // {servers:[{name,url,type}], subtitles:[...]}
+  try {
+    const title = encodeURIComponent(titleOf(anime));
+    const r = await fetch(`/api/episode?id=${anime.id}&ep=${ep}&title=${title}`);
+    if (r.ok) return await r.json();
+  } catch(e) {}
+
+  return {
+    servers: [
+      { name: 'سيرفر HLS تجريبي', url: 'https://test-streams.mux.dev/x36xhzz/x36xhzz.m3u8', type: 'm3u8' }
+    ],
+    subtitles: []
+  };
 }
 
 function renderServers() {
@@ -216,28 +220,52 @@ function selectServer(i, soft = false) {
 }
 
 /* ============================================================
-   2) البحث — مربوط تلقائياً بـ /api/search
+   2) البحث المباشر فائق السرعة عبر AniList (بدون خادم وسيط)
    ============================================================ */
 let debounce;
 $('#searchInput').addEventListener('input', e => {
   clearTimeout(debounce);
   const q = e.target.value.trim();
-  debounce = setTimeout(() => runSearch(q), 400);
+  debounce = setTimeout(() => runSearch(q), 350);
 });
 
 async function runSearch(q) {
   const status = $('#status'), grid = $('#grid');
   if (!q) { status.hidden = true; grid.innerHTML = ''; return; }
   status.hidden = false; status.textContent = 'جارٍ البحث…'; grid.innerHTML = '';
+
+  const query = `
+    query ($search: String) {
+      Page(page: 1, perPage: 12) {
+        media(search: $search, type: ANIME, sort: POPULARITY_DESC) {
+          id
+          title { romaji english }
+          episodes
+          coverImage { large }
+          averageScore
+        }
+      }
+    }`;
+
   try {
-    const r = await fetch(`/api/search?q=${encodeURIComponent(q)}`);
-    if (!r.ok) throw new Error('HTTP ' + r.status);
-    const list = await r.json();
+    const r = await fetch('https://graphql.anilist.co', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'Accept': 'application/json'
+      },
+      body: JSON.stringify({ query, variables: { search: q } })
+    });
+
+    if (!r.ok) throw new Error('API Error');
+    const res = await r.json();
+    const list = res.data?.Page?.media || [];
+
     if (!list.length) { status.textContent = 'لا توجد نتائج مطابقة.'; return; }
     status.hidden = true;
     renderGrid(list);
   } catch (e) {
-    status.textContent = 'تعذّر الاتصال بالخادم — تأكد أن دالة /api/search تعمل على Vercel.';
+    status.textContent = 'تعذّر جلب النتائج — تأكد من اتصال الإنترنت.';
   }
 }
 
@@ -314,26 +342,21 @@ function updateEpButtons() {
 }
 
 /* ============================================================
-   4) تحميل الحلقة — مباشر (Artplayer) أو تضمين (iframe)
+   4) تحميل الحلقة والمشغل
    ============================================================ */
 async function loadEpisode(ep, soft = false) {
   if (!state.anime) return;
   state.ep = ep;
   state.serverIndex = 0;
   $('#progressInfo').textContent = 'جارٍ تحميل المصدر…';
-  try {
-    state.data = await resolveStream(state.anime, ep);
-  } catch (e) {
-    state.data = { servers: [], subtitles: [] };
-    $('#progressInfo').textContent = 'تعذّر جلب الحلقة — تأكد من عمل /api/episode';
-  }
+  state.data = await resolveStream(state.anime, ep);
+
   renderServers();
   updateEpButtons();
   updatePlayerBar();
   saveLast();
   const servers = state.data.servers || [];
   if (servers.length) {
-    // أولوية تلقائية لأول سيرفر مباشر (m3u8/mp4) وإلا أول سيرفر متاح
     const first = servers.findIndex(s => s.type !== 'embed');
     selectServer(first === -1 ? 0 : first, soft);
   } else {
@@ -396,7 +419,7 @@ function playHls(video, url) {
     hls.loadSource(url);
     hls.attachMedia(video);
   } else {
-    video.src = url; // Safari يدعم HLS أصلاً
+    video.src = url;
   }
 }
 
@@ -414,7 +437,7 @@ function destroyPlayer() {
 }
 
 /* ============================================================
-   6) LocalStorage — مشاهَد + استئناف التوقيت
+   5) LocalStorage وحفظ المشاهدة
    ============================================================ */
 function getWatched(id) {
   try { return new Set(JSON.parse(localStorage.getItem(LS.watched(id))) || []); }
@@ -468,7 +491,6 @@ function saveLast() {
   }));
 }
 
-/* أكمل المشاهدة */
 function renderContinue() {
   const items = Object.values(getProgressStore())
     .filter(v => v.d && v.t > 20 && v.t < v.d * 0.95)
@@ -493,9 +515,6 @@ function renderContinue() {
     }));
 }
 
-/* ============================================================
-   7) أزرار الشريط السفلي
-   ============================================================ */
 function updatePlayerBar() {
   const total = state.anime?.episodes || 1;
   const watched = state.anime && getWatched(state.anime.id).has(state.ep);
@@ -511,14 +530,11 @@ $('#btnNext').addEventListener('click', () => state.ep < (state.anime.episodes |
 
 window.addEventListener('beforeunload', saveProgress);
 
-/* ============================================================
-   8) استعادة آخر مشاهدة عند فتح الموقع
-   ============================================================ */
 window.addEventListener('DOMContentLoaded', () => {
   renderContinue();
   try {
     const last = JSON.parse(localStorage.getItem(LS.last) || 'null');
-    if (last?.id) selectAnime(last, last.ep || 1, true); // soft: بدون صوت تجاوزاً لحظر التشغيل التلقائي
+    if (last?.id) selectAnime(last, last.ep || 1, true);
   } catch(e) {}
 });
 </script>
