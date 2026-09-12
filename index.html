@@ -69,6 +69,14 @@ header{position:sticky;top:0;z-index:50;background:rgba(11,14,20,.85);backdrop-f
 .load-more{grid-column:1/-1;padding:10px;background:transparent;border:1px dashed var(--border);border-radius:9px;color:var(--muted);font-family:inherit;font-size:13px;cursor:pointer}
 .load-more:hover{color:var(--text);border-color:var(--accent)}
 
+/* ===== السيرفرات ===== */
+.servers{display:flex;gap:8px;flex-wrap:wrap;margin:12px 0}
+.srv{background:var(--surface2);border:1px solid var(--border);color:var(--text);font-family:inherit;font-size:12px;font-weight:700;padding:7px 14px;border-radius:99px;cursor:pointer;transition:.15s}
+.srv small{color:var(--muted);font-weight:400;margin-inline-start:5px}
+.srv:hover{border-color:var(--accent)}
+.srv.active{background:linear-gradient(90deg,var(--accent),var(--accent2));border-color:transparent;color:#fff}
+.srv.active small{color:rgba(255,255,255,.8)}
+
 /* ===== البحث ===== */
 .search-box{display:flex;align-items:center;gap:10px;background:var(--surface);border:1px solid var(--border);border-radius:99px;padding:12px 18px;margin:22px 0 14px;transition:border-color .2s}
 .search-box:focus-within{border-color:var(--accent)}
@@ -124,10 +132,6 @@ footer{text-align:center;color:var(--muted);font-size:12px;padding:24px 16px;bor
         <h2 id="pTitle"></h2>
         <p id="pMeta" class="muted"></p>
       </div>
-      <div class="mode-toggle">
-        <button id="btnDirect" class="mode active">مشغّل مباشر</button>
-        <button id="btnEmbed" class="mode">تضمين خارجي</button>
-      </div>
     </div>
 
     <div class="player-wrap" dir="ltr">
@@ -135,6 +139,8 @@ footer{text-align:center;color:var(--muted);font-size:12px;padding:24px 16px;bor
       <iframe id="embedFrame" hidden allowfullscreen sandbox="allow-scripts allow-same-origin allow-forms allow-presentation"
               allow="autoplay; fullscreen; encrypted-media; picture-in-picture" referrerpolicy="no-referrer"></iframe>
     </div>
+
+    <div id="servers" class="servers"></div>
 
     <div class="player-bar">
       <button id="btnWatched" class="btn">✓ تعيين كمشاهدة</button>
@@ -171,7 +177,7 @@ const LS = {
   last: 'aw_last'
 };
 
-let state = { anime: null, ep: null, mode: 'direct', stream: null };
+let state = { anime: null, ep: null, data: null, serverIndex: 0 };
 let art = null, hls = null, lastSave = 0;
 const EP_CHUNK = 200;
 
@@ -179,15 +185,34 @@ const EP_CHUNK = 200;
    1) مصادر البث — عدّل هذه الدالة عند جاهزية api/episode.js
    ============================================================ */
 async function resolveStream(anime, ep) {
-  // الخيار المستقبلي (عند بناء api/episode.js):
-  // const r = await fetch(`/api/episode?id=${anime.id}&ep=${ep}`);
-  // return await r.json(); // {url, type:'m3u8'|'mp4', embedUrl, subtitles:[{url,type,label}]}
-  return {
-    url: 'https://test-streams.mux.dev/x36xhzz/x36xhzz.m3u8', // بث تجريبي قانوني
-    type: 'm3u8',
-    embedUrl: null,
-    subtitles: []
-  };
+  const title = encodeURIComponent(titleOf(anime));
+  const r = await fetch(`/api/episode?id=${anime.id}&ep=${ep}&title=${title}`);
+  if (!r.ok) throw new Error('HTTP ' + r.status);
+  return await r.json(); // {servers:[{name,url,type}], subtitles:[...]}
+}
+
+function renderServers() {
+  const wrap = $('#servers');
+  const servers = state.data?.servers || [];
+  if (!servers.length) {
+    wrap.innerHTML = '<span class="muted" style="font-size:13px">لا توجد سيرفرات متاحة لهذه الحلقة.</span>';
+    return;
+  }
+  wrap.innerHTML = servers.map((s, i) => `
+    <button class="srv ${i === state.serverIndex ? 'active' : ''}" data-i="${i}">
+      ${esc(s.name)}<small>${s.type === 'embed' ? 'تضمين' : s.type.toUpperCase()}</small>
+    </button>`).join('');
+  wrap.querySelectorAll('.srv').forEach(b =>
+    b.addEventListener('click', () => selectServer(Number(b.dataset.i))));
+}
+
+function selectServer(i, soft = false) {
+  const s = state.data?.servers?.[i];
+  if (!s) return;
+  state.serverIndex = i;
+  renderServers();
+  if (s.type === 'embed') showEmbed(s.url);
+  else showDirect({ url: s.url, type: s.type, subtitles: state.data.subtitles || [] }, soft);
 }
 
 /* ============================================================
@@ -294,18 +319,26 @@ function updateEpButtons() {
 async function loadEpisode(ep, soft = false) {
   if (!state.anime) return;
   state.ep = ep;
+  state.serverIndex = 0;
   $('#progressInfo').textContent = 'جارٍ تحميل المصدر…';
-  state.stream = await resolveStream(state.anime, ep);
-
-  if (state.mode === 'embed' && state.stream.embedUrl) {
-    showEmbed(state.stream.embedUrl);
-  } else {
-    if (state.mode === 'embed') setMode('direct', true);
-    showDirect(state.stream, soft);
+  try {
+    state.data = await resolveStream(state.anime, ep);
+  } catch (e) {
+    state.data = { servers: [], subtitles: [] };
+    $('#progressInfo').textContent = 'تعذّر جلب الحلقة — تأكد من عمل /api/episode';
   }
+  renderServers();
   updateEpButtons();
   updatePlayerBar();
   saveLast();
+  const servers = state.data.servers || [];
+  if (servers.length) {
+    // أولوية تلقائية لأول سيرفر مباشر (m3u8/mp4) وإلا أول سيرفر متاح
+    const first = servers.findIndex(s => s.type !== 'embed');
+    selectServer(first === -1 ? 0 : first, soft);
+  } else {
+    destroyPlayer();
+  }
 }
 
 function showDirect(stream, soft) {
@@ -379,20 +412,6 @@ function destroyPlayer() {
   if (art) { try { art.destroy(true); } catch(e) {} art = null; }
   if (hls) { try { hls.destroy(); } catch(e) {} hls = null; }
 }
-
-/* ============================================================
-   5) التبديل بين الوضعين
-   ============================================================ */
-function setMode(mode, silent) {
-  state.mode = mode;
-  $('#btnDirect').classList.toggle('active', mode === 'direct');
-  $('#btnEmbed').classList.toggle('active', mode === 'embed');
-  if (silent || !state.stream) return;
-  if (mode === 'embed' && state.stream.embedUrl) showEmbed(state.stream.embedUrl);
-  else showDirect(state.stream);
-}
-$('#btnDirect').addEventListener('click', () => setMode('direct'));
-$('#btnEmbed').addEventListener('click', () => setMode('embed'));
 
 /* ============================================================
    6) LocalStorage — مشاهَد + استئناف التوقيت
@@ -485,7 +504,6 @@ function updatePlayerBar() {
   bw.textContent = watched ? '✓ تمت مشاهدتها' : '✓ تعيين كمشاهدة';
   bw.classList.toggle('done', !!watched);
   $('#btnNext').disabled = state.ep >= total;
-  $('#btnEmbed').disabled = !(state.stream && state.stream.embedUrl);
   $('#pMeta').textContent = `${state.anime?.episodes || '?'} حلقة — أنت تشاهد: الحلقة ${state.ep}`;
 }
 $('#btnWatched').addEventListener('click', () => state.anime && markWatched(state.anime.id, state.ep));
