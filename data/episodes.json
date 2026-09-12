@@ -2,14 +2,19 @@
   "subtitles": [],
   "templates": [
     {
-      "name": "سيرفر التضمين 1",
+      "name": "سيرفر الأنمي 1 (embed.su)",
       "type": "embed",
-      "url": "https://vidsrc.cc/v2/embed/anime/{id}/{ep}"
+      "url": "https://embed.su/embed/anime/{id}/{ep}"
     },
     {
-      "name": "سيرفر التضمين 2",
+      "name": "سيرفر الأنمي 2 (بديل MAL)",
       "type": "embed",
       "url": "https://2embed.cc/embed/anime/{id}/{ep}"
+    },
+    {
+      "name": "سيرفر بحث بالاسم (تلقائي)",
+      "type": "embed",
+      "url": "https://multiembed.mov/?video_id={id}&an=1&s=1&e={ep}"
     }
   ],
   "anime": {}
