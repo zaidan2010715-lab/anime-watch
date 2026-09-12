@@ -2,43 +2,15 @@
   "subtitles": [],
   "templates": [
     {
-      "name": "مشغّل الموقع المضمّن",
+      "name": "سيرفر التضمين 1",
       "type": "embed",
-      "url": "https://YOUR-APP.vercel.app/player?id={id}&ep={ep}"
+      "url": "https://vidsrc.cc/v2/embed/anime/{id}/{ep}"
+    },
+    {
+      "name": "سيرفر التضمين 2",
+      "type": "embed",
+      "url": "https://2embed.cc/embed/anime/{id}/{ep}"
     }
   ],
-  "anime": {
-    "21": {
-      "title": "One Piece",
-      "servers": [],
-      "episodes": {
-        "*": {
-          "servers": [
-            {
-              "name": "بث تجريبي — للاختبار فقط",
-              "url": "https://test-streams.mux.dev/x36xhzz/x36xhzz.m3u8",
-              "type": "m3u8"
-            }
-          ]
-        },
-        "1": {
-          "servers": [
-            {
-              "name": "يوتيوب — Muse Asia",
-              "url": "https://www.youtube-nocookie.com/embed/VIDEO_ID_HERE",
-              "type": "embed"
-            }
-          ],
-          "subtitles": [
-            {
-              "url": "/subs/one-piece-01-ar.vtt",
-              "lang": "ara",
-              "label": "العربية",
-              "type": "vtt"
-            }
-          ]
-        }
-      }
-    }
-  }
+  "anime": {}
 }
