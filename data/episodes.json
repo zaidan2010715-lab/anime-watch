@@ -1,46 +1,17 @@
 {
   "subtitles": [],
-  "templates": [
-    {
-      "name": "مشغّلي الخاص (مثال)",
-      "type": "embed",
-      "url": "https://player.example.com/embed/{id}/{ep}"
-    }
-  ],
+  "templates": [],
   "anime": {
-    "21": {
-      "title": "One Piece",
+    "20": {
+      "title": "Naruto",
       "servers": [],
       "episodes": {
         "*": {
           "servers": [
             {
-              "name": "سيرفري — HLS",
-              "url": "https://cdn.example.com/anime/one-piece/ep{ep}.m3u8",
+              "name": "سيرفر البث السريع (HLS)",
+              "url": "https://test-streams.mux.dev/x36xhzz/x36xhzz.m3u8",
               "type": "m3u8"
-            }
-          ]
-        },
-        "1": {
-          "servers": [
-            {
-              "name": "يوتيوب — Muse Asia",
-              "url": "https://www.youtube-nocookie.com/embed/VIDEO_ID_HERE",
-              "type": "embed"
-            }
-          ],
-          "subtitles": [
-            {
-              "url": "/subs/one-piece-01-ar.vtt",
-              "lang": "ara",
-              "label": "العربية",
-              "type": "vtt"
-            },
-            {
-              "url": "/subs/one-piece-01-en.vtt",
-              "lang": "eng",
-              "label": "English",
-              "type": "vtt"
             }
           ]
         }
