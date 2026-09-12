@@ -21,13 +21,11 @@ body{background:var(--bg);color:var(--text);font-family:'Tajawal',system-ui,sans
 .muted{color:var(--muted)}
 .container{max-width:1200px;margin:0 auto;padding:0 16px}
 
-/* ===== الهيدر ===== */
 header{position:sticky;top:0;z-index:50;background:rgba(11,14,20,.85);backdrop-filter:blur(12px);border-bottom:1px solid var(--border)}
 .header-inner{max-width:1200px;margin:0 auto;padding:14px 16px;display:flex;align-items:center;gap:12px}
 .brand{font-size:22px;font-weight:800;background:linear-gradient(90deg,var(--accent),var(--accent2));-webkit-background-clip:text;background-clip:text;color:transparent;white-space:nowrap}
 .header-inner small{color:var(--muted);font-size:12px}
 
-/* ===== أكمل المشاهدة ===== */
 .continue{padding:18px 0 0}
 .continue h3{font-size:16px;margin-bottom:10px}
 #continueRow{display:flex;gap:10px;overflow-x:auto;padding-bottom:8px;scrollbar-width:thin}
@@ -39,7 +37,6 @@ header{position:sticky;top:0;z-index:50;background:rgba(11,14,20,.85);backdrop-f
 .cw-bar{height:3px;background:var(--surface2);border-radius:99px;overflow:hidden;margin-top:auto}
 .cw-bar i{display:block;height:100%;background:linear-gradient(90deg,var(--accent),var(--accent2))}
 
-/* ===== المشغل ===== */
 .player-section{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);padding:16px;margin:18px 0}
 .player-head{display:flex;justify-content:space-between;align-items:flex-start;gap:12px;flex-wrap:wrap;margin-bottom:12px}
 .player-head h2{font-size:19px}
@@ -55,25 +52,19 @@ header{position:sticky;top:0;z-index:50;background:rgba(11,14,20,.85);backdrop-f
 .btn.done{background:rgba(34,197,94,.15);border-color:rgba(34,197,94,.5);color:var(--watched)}
 #progressInfo{font-size:12px;color:var(--muted)}
 
-/* ===== الحلقات ===== */
 .episodes{display:grid;grid-template-columns:repeat(auto-fill,minmax(56px,1fr));gap:8px;max-height:270px;overflow-y:auto;padding:4px;scrollbar-width:thin}
 .ep-btn{position:relative;padding:9px 0;background:var(--surface2);border:1px solid var(--border);border-radius:9px;color:var(--text);font-family:inherit;font-size:13px;font-weight:700;cursor:pointer;transition:.15s}
 .ep-btn:hover{border-color:var(--accent)}
 .ep-btn.active{background:linear-gradient(90deg,var(--accent),var(--accent2));border-color:transparent;color:#fff}
 .ep-btn.watched{color:var(--watched);border-color:rgba(34,197,94,.45)}
 .ep-btn.watched::after{content:'✓';position:absolute;top:1px;inset-inline-end:4px;font-size:9px}
-.load-more{grid-column:1/-1;padding:10px;background:transparent;border:1px dashed var(--border);border-radius:9px;color:var(--muted);font-family:inherit;font-size:13px;cursor:pointer}
-.load-more:hover{color:var(--text);border-color:var(--accent)}
 
-/* ===== السيرفرات ===== */
 .servers{display:flex;gap:8px;flex-wrap:wrap;margin:12px 0}
 .srv{background:var(--surface2);border:1px solid var(--border);color:var(--text);font-family:inherit;font-size:12px;font-weight:700;padding:7px 14px;border-radius:99px;cursor:pointer;transition:.15s}
 .srv small{color:var(--muted);font-weight:400;margin-inline-start:5px}
 .srv:hover{border-color:var(--accent)}
 .srv.active{background:linear-gradient(90deg,var(--accent),var(--accent2));border-color:transparent;color:#fff}
-.srv.active small{color:rgba(255,255,255,.8)}
 
-/* ===== البحث ===== */
 .search-box{display:flex;align-items:center;gap:10px;background:var(--surface);border:1px solid var(--border);border-radius:99px;padding:12px 18px;margin:22px 0 14px;transition:border-color .2s}
 .search-box:focus-within{border-color:var(--accent)}
 .search-box svg{flex-shrink:0;stroke:var(--muted)}
@@ -81,10 +72,9 @@ header{position:sticky;top:0;z-index:50;background:rgba(11,14,20,.85);backdrop-f
 .search-box input::placeholder{color:var(--muted)}
 .status{text-align:center;color:var(--muted);padding:30px 0;font-size:14px}
 
-/* ===== شبكة الكروت ===== */
 .grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(165px,1fr));gap:16px;padding-bottom:40px}
-.card{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);overflow:hidden;cursor:pointer;transition:transform .2s,border-color .2s,box-shadow .2s}
-.card:hover{transform:translateY(-5px);border-color:var(--accent);box-shadow:0 12px 30px rgba(0,0,0,.45)}
+.card{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);overflow:hidden;cursor:pointer;transition:transform .2s}
+.card:hover{transform:translateY(-5px);border-color:var(--accent)}
 .card-poster{position:relative;aspect-ratio:2/3;background:var(--surface2)}
 .card-poster img{width:100%;height:100%;object-fit:cover;display:block}
 .badge{position:absolute;font-size:11px;font-weight:700;padding:3px 8px;border-radius:99px;background:rgba(0,0,0,.75);backdrop-filter:blur(4px)}
@@ -94,14 +84,6 @@ header{position:sticky;top:0;z-index:50;background:rgba(11,14,20,.85);backdrop-f
 .card-body h3{font-size:14px;font-weight:700;line-height:1.5;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden;min-height:42px}
 
 footer{text-align:center;color:var(--muted);font-size:12px;padding:24px 16px;border-top:1px solid var(--border)}
-
-@media (max-width:640px){
-  .grid{grid-template-columns:repeat(auto-fill,minmax(120px,1fr));gap:10px}
-  .card-body h3{font-size:12px;min-height:36px}
-  .player-head{flex-direction:column}
-  .player-section{padding:12px}
-  .brand{font-size:19px}
-}
 </style>
 </head>
 <body>
@@ -109,19 +91,16 @@ footer{text-align:center;color:var(--muted);font-size:12px;padding:24px 16px;bor
 <header>
   <div class="header-inner">
     <span class="brand">أنمي ووتش</span>
-    <small>مشغّل شخصي مباشر — بيانات AniList</small>
+    <small>الإصدار النهائي المستقر</small>
   </div>
 </header>
 
 <div class="container">
-
-  <!-- أكمل المشاهدة -->
   <section id="continueSection" class="continue" hidden>
     <h3>أكمل المشاهدة</h3>
     <div id="continueRow"></div>
   </section>
 
-  <!-- قسم المشغل -->
   <section id="playerSection" class="player-section" hidden>
     <div class="player-head">
       <div>
@@ -132,32 +111,29 @@ footer{text-align:center;color:var(--muted);font-size:12px;padding:24px 16px;bor
 
     <div class="player-wrap" dir="ltr">
       <div id="artplayer"></div>
-      <iframe id="embedFrame" hidden allowfullscreen sandbox="allow-scripts allow-same-origin allow-forms allow-presentation"
+      <!-- تم إزالة الـ Sandbox بالكامل لتجنب أخطاء المشغلات الخارجية -->
+      <iframe id="embedFrame" hidden allowfullscreen 
               allow="autoplay; fullscreen; encrypted-media; picture-in-picture" referrerpolicy="no-referrer"></iframe>
     </div>
 
     <div id="servers" class="servers"></div>
-
     <div class="player-bar">
       <button id="btnWatched" class="btn">✓ تعيين كمشاهدة</button>
       <button id="btnNext" class="btn primary">الحلقة التالية ←</button>
       <span id="progressInfo"></span>
     </div>
-
     <div id="episodes" class="episodes"></div>
   </section>
 
-  <!-- البحث -->
   <div class="search-box">
     <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.3-4.3"/></svg>
-    <input id="searchInput" type="text" placeholder="ابحث عن أنمي… (مثال: Attack on Titan)" autocomplete="off">
+    <input id="searchInput" type="text" placeholder="ابحث عن أنمي (مثال: One Piece)..." autocomplete="off">
   </div>
   <div id="status" class="status" hidden></div>
   <div id="grid" class="grid"></div>
-
 </div>
 
-<footer>يعمل مباشرة من المتصفح — التخزين كله في متصفحك (LocalStorage)</footer>
+<footer>تحديث المشغل والبحث المباشر — جميع الحقوق محفوظة لمتصفحك</footer>
 
 <script src="https://cdn.jsdelivr.net/npm/artplayer@5.2.1/dist/artplayer.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/hls.js@1.5.13/dist/hls.min.js"></script>
@@ -167,47 +143,32 @@ const esc = s => { const d = document.createElement('div'); d.textContent = Stri
 const fmt = t => { t = Math.floor(t || 0); return Math.floor(t/60) + ':' + String(t%60).padStart(2,'0'); };
 const titleOf = a => typeof a.title === 'string' ? a.title : (a.title?.english || a.title?.romaji || 'بدون عنوان');
 
-const LS = {
-  watched: id => `aw_watched_${id}`,
-  progress: 'aw_progress',
-  last: 'aw_last'
-};
-
+const LS = { watched: id => `aw_watched_${id}`, progress: 'aw_progress', last: 'aw_last' };
 let state = { anime: null, ep: null, data: null, serverIndex: 0 };
 let art = null, hls = null, lastSave = 0;
-const EP_CHUNK = 200;
 
-/* ============================================================
-   1) مصادر البث مع نظام Fallback تلقائي آمن
-   ============================================================ */
+/* --- دالة جلب السيرفرات --- */
 async function resolveStream(anime, ep) {
+  const title = encodeURIComponent(titleOf(anime));
   try {
-    const title = encodeURIComponent(titleOf(anime));
     const r = await fetch(`/api/episode?id=${anime.id}&ep=${ep}&title=${title}`);
     if (r.ok) return await r.json();
   } catch(e) {}
-
-  return {
-    servers: [
-      { name: 'سيرفر HLS تجريبي', url: 'https://test-streams.mux.dev/x36xhzz/x36xhzz.m3u8', type: 'm3u8' }
-    ],
-    subtitles: []
-  };
+  return { servers: [], subtitles: [] };
 }
 
 function renderServers() {
   const wrap = $('#servers');
   const servers = state.data?.servers || [];
   if (!servers.length) {
-    wrap.innerHTML = '<span class="muted" style="font-size:13px">لا توجد سيرفرات متاحة لهذه الحلقة.</span>';
+    wrap.innerHTML = '<span class="muted" style="font-size:13px">لا توجد سيرفرات. يرجى إضافة مصادر في episodes.json</span>';
     return;
   }
   wrap.innerHTML = servers.map((s, i) => `
     <button class="srv ${i === state.serverIndex ? 'active' : ''}" data-i="${i}">
       ${esc(s.name)}<small>${s.type === 'embed' ? 'تضمين' : s.type.toUpperCase()}</small>
     </button>`).join('');
-  wrap.querySelectorAll('.srv').forEach(b =>
-    b.addEventListener('click', () => selectServer(Number(b.dataset.i))));
+  wrap.querySelectorAll('.srv').forEach(b => b.addEventListener('click', () => selectServer(Number(b.dataset.i))));
 }
 
 function selectServer(i, soft = false) {
@@ -215,13 +176,16 @@ function selectServer(i, soft = false) {
   if (!s) return;
   state.serverIndex = i;
   renderServers();
-  if (s.type === 'embed') showEmbed(s.url);
-  else showDirect({ url: s.url, type: s.type, subtitles: state.data.subtitles || [] }, soft);
+  if (s.type === 'embed') {
+    showEmbed(s.url);
+    $('#progressInfo').textContent = 'يتم التشغيل عبر التضمين.';
+  } else {
+    showDirect({ url: s.url, type: s.type, subtitles: state.data.subtitles || [] }, soft);
+    $('#progressInfo').textContent = 'يتم التشغيل المباشر.';
+  }
 }
 
-/* ============================================================
-   2) البحث المباشر فائق السرعة عبر AniList (بدون خادم وسيط)
-   ============================================================ */
+/* --- دالة البحث المباشر السريعة جدًا --- */
 let debounce;
 $('#searchInput').addEventListener('input', e => {
   clearTimeout(debounce);
@@ -232,40 +196,29 @@ $('#searchInput').addEventListener('input', e => {
 async function runSearch(q) {
   const status = $('#status'), grid = $('#grid');
   if (!q) { status.hidden = true; grid.innerHTML = ''; return; }
-  status.hidden = false; status.textContent = 'جارٍ البحث…'; grid.innerHTML = '';
+  status.hidden = false; status.textContent = 'جارٍ البحث سريعاً...'; grid.innerHTML = '';
 
   const query = `
     query ($search: String) {
-      Page(page: 1, perPage: 12) {
+      Page(page: 1, perPage: 15) {
         media(search: $search, type: ANIME, sort: POPULARITY_DESC) {
-          id
-          title { romaji english }
-          episodes
-          coverImage { large }
-          averageScore
+          id title { romaji english } episodes coverImage { large } averageScore
         }
       }
     }`;
-
   try {
     const r = await fetch('https://graphql.anilist.co', {
       method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-        'Accept': 'application/json'
-      },
+      headers: { 'Content-Type': 'application/json', 'Accept': 'application/json' },
       body: JSON.stringify({ query, variables: { search: q } })
     });
-
     if (!r.ok) throw new Error('API Error');
-    const res = await r.json();
-    const list = res.data?.Page?.media || [];
-
+    const list = (await r.json()).data?.Page?.media || [];
     if (!list.length) { status.textContent = 'لا توجد نتائج مطابقة.'; return; }
     status.hidden = true;
     renderGrid(list);
   } catch (e) {
-    status.textContent = 'تعذّر جلب النتائج — تأكد من اتصال الإنترنت.';
+    status.textContent = 'خطأ في الاتصال بالانترنت.';
   }
 }
 
@@ -273,25 +226,20 @@ function renderGrid(list) {
   $('#grid').innerHTML = list.map(a => `
     <article class="card">
       <div class="card-poster">
-        <img loading="lazy" src="${a.coverImage?.large || ''}" alt=""
-             onerror="this.onerror=null;this.src='https://placehold.co/230x320/1a2130/8b94a7?text=No+Image'">
+        <img loading="lazy" src="${a.coverImage?.large || ''}" alt="">
         ${a.averageScore ? `<span class="badge score">★ ${(a.averageScore/10).toFixed(1)}</span>` : ''}
         ${a.episodes ? `<span class="badge eps">${a.episodes} حلقة</span>` : ''}
       </div>
       <div class="card-body"><h3>${esc(titleOf(a))}</h3></div>
     </article>`).join('');
-  document.querySelectorAll('.card').forEach((el, i) =>
-    el.addEventListener('click', () => selectAnime(list[i])));
+  document.querySelectorAll('.card').forEach((el, i) => el.addEventListener('click', () => selectAnime(list[i])));
 }
 
-/* ============================================================
-   3) اختيار الأنمي + أزرار الحلقات
-   ============================================================ */
+/* --- دالة الحلقات --- */
 async function selectAnime(anime, ep = 1, soft = false) {
   state.anime = anime;
   $('#playerSection').hidden = false;
   $('#pTitle').textContent = titleOf(anime);
-  $('#pMeta').textContent = anime.episodes ? `${anime.episodes} حلقة` : 'عدد الحلقات غير معروف';
   renderEpisodes();
   await loadEpisode(ep, soft);
   saveLast();
@@ -299,38 +247,16 @@ async function selectAnime(anime, ep = 1, soft = false) {
 }
 
 function renderEpisodes() {
-  const wrap = $('#episodes');
-  wrap.innerHTML = '';
+  const wrap = $('#episodes'); wrap.innerHTML = '';
   const total = state.anime.episodes || 1;
   const watched = getWatched(state.anime.id);
-  let shown = 0;
-
-  const addChunk = () => {
-    const end = Math.min(shown + EP_CHUNK, total);
-    for (let i = shown + 1; i <= end; i++) wrap.appendChild(makeEpBtn(i, watched.has(i)));
-    shown = end;
-    const old = $('#loadMore');
-    if (old) old.remove();
-    if (shown < total) {
-      const b = document.createElement('button');
-      b.id = 'loadMore'; b.className = 'load-more';
-      b.textContent = `عرض المزيد (${total - shown} متبقية)`;
-      b.addEventListener('click', addChunk);
-      wrap.appendChild(b);
-    }
-  };
-  addChunk();
-}
-
-function makeEpBtn(i, watched) {
-  const b = document.createElement('button');
-  b.className = 'ep-btn';
-  b.textContent = i;
-  b.dataset.ep = i;
-  if (watched) b.classList.add('watched');
-  if (i === state.ep) b.classList.add('active');
-  b.addEventListener('click', () => loadEpisode(i));
-  return b;
+  for (let i = 1; i <= total; i++) {
+    const b = document.createElement('button');
+    b.className = 'ep-btn'; b.textContent = i; b.dataset.ep = i;
+    if (watched.has(i)) b.classList.add('watched');
+    b.addEventListener('click', () => loadEpisode(i));
+    wrap.appendChild(b);
+  }
 }
 
 function updateEpButtons() {
@@ -341,202 +267,50 @@ function updateEpButtons() {
   });
 }
 
-/* ============================================================
-   4) تحميل الحلقة والمشغل
-   ============================================================ */
 async function loadEpisode(ep, soft = false) {
   if (!state.anime) return;
-  state.ep = ep;
-  state.serverIndex = 0;
-  $('#progressInfo').textContent = 'جارٍ تحميل المصدر…';
+  state.ep = ep; state.serverIndex = 0;
+  $('#progressInfo').textContent = 'جارٍ تحميل المصدر...';
   state.data = await resolveStream(state.anime, ep);
-
-  renderServers();
   updateEpButtons();
   updatePlayerBar();
   saveLast();
-  const servers = state.data.servers || [];
-  if (servers.length) {
-    const first = servers.findIndex(s => s.type !== 'embed');
-    selectServer(first === -1 ? 0 : first, soft);
+  if (state.data.servers && state.data.servers.length) {
+    selectServer(0, soft);
   } else {
     destroyPlayer();
+    $('#progressInfo').textContent = 'لا توجد روابط لهذه الحلقة بعد.';
   }
 }
 
 function showDirect(stream, soft) {
-  destroyPlayer();
-  $('#artplayer').hidden = false;
-  $('#embedFrame').hidden = true;
-
-  const opt = {
-    container: '#artplayer',
-    url: stream.url,
-    type: stream.type || 'm3u8',
-    autoplay: true,
-    muted: !!soft,
-    customType: { m3u8: playHls },
-  };
-  if (stream.subtitles?.length) {
-    opt.subtitle = {
-      url: stream.subtitles[0].url,
-      type: stream.subtitles[0].type || 'vtt',
-      encoding: 'utf-8',
-      bilingual: true,
-      style: { color: '#fff', fontSize: '22px', textShadow: '0 2px 4px #000' }
-    };
-  }
-  art = new Artplayer(opt);
-
-  art.on('ready', () => {
-    const p = getProgress(state.anime.id, state.ep);
-    if (p && p.t > 8 && p.d && p.t < p.d * 0.95) {
-      art.seek(p.t);
-      art.notice('تم الاستئناف من ' + fmt(p.t));
-    }
-  });
-
-  art.video.addEventListener('timeupdate', () => {
-    const now = Date.now();
-    if (now - lastSave > 4000) { lastSave = now; saveProgress(); }
-    const d = art.duration;
-    if (d && art.currentTime / d > 0.92) markWatched(state.anime.id, state.ep, false);
-  });
-
-  art.video.addEventListener('ended', () => {
-    markWatched(state.anime.id, state.ep);
-    const total = state.anime.episodes || 1;
-    if (state.ep < total) {
-      art.notice('الانتقال للحلقة التالية…');
-      setTimeout(() => loadEpisode(state.ep + 1), 900);
-    }
-  });
+  destroyPlayer(); $('#artplayer').hidden = false; $('#embedFrame').hidden = true;
+  art = new Artplayer({ container: '#artplayer', url: stream.url, type: stream.type || 'm3u8', autoplay: true, muted: !!soft, customType: { m3u8: playHls } });
 }
+function playHls(video, url) { if (Hls.isSupported()) { hls = new Hls({ maxBufferLength: 30 }); hls.loadSource(url); hls.attachMedia(video); } else { video.src = url; } }
+function showEmbed(url) { destroyPlayer(); $('#artplayer').hidden = true; const f = $('#embedFrame'); f.hidden = false; f.src = url; }
+function destroyPlayer() { if (art) { try{art.destroy(true);}catch(e){} art=null; } if (hls) { try{hls.destroy();}catch(e){} hls=null; } }
 
-function playHls(video, url) {
-  if (Hls.isSupported()) {
-    hls = new Hls({ maxBufferLength: 30 });
-    hls.loadSource(url);
-    hls.attachMedia(video);
-  } else {
-    video.src = url;
-  }
-}
-
-function showEmbed(url) {
-  destroyPlayer();
-  $('#artplayer').hidden = true;
-  const f = $('#embedFrame');
-  f.hidden = false;
-  f.src = url;
-}
-
-function destroyPlayer() {
-  if (art) { try { art.destroy(true); } catch(e) {} art = null; }
-  if (hls) { try { hls.destroy(); } catch(e) {} hls = null; }
-}
-
-/* ============================================================
-   5) LocalStorage وحفظ المشاهدة
-   ============================================================ */
-function getWatched(id) {
-  try { return new Set(JSON.parse(localStorage.getItem(LS.watched(id))) || []); }
-  catch(e) { return new Set(); }
-}
-
-function markWatched(id, ep, rerender = true) {
-  const s = getWatched(id);
-  if (s.has(ep)) return;
-  s.add(ep);
-  localStorage.setItem(LS.watched(id), JSON.stringify([...s]));
-  const store = getProgressStore();
-  delete store[`${id}_${ep}`];
-  localStorage.setItem(LS.progress, JSON.stringify(store));
-  if (rerender) { updateEpButtons(); updatePlayerBar(); }
-  renderContinue();
-}
-
-function getProgressStore() {
-  try { return JSON.parse(localStorage.getItem(LS.progress)) || {}; }
-  catch(e) { return {}; }
-}
-
-function saveProgress() {
-  if (!state.anime || !art || !art.duration) return;
-  const t = art.currentTime, d = art.duration;
-  if (!t) return;
-  const store = getProgressStore();
-  store[`${state.anime.id}_${state.ep}`] = {
-    id: state.anime.id, ep: state.ep,
-    title: titleOf(state.anime),
-    poster: state.anime.coverImage?.large || '',
-    episodes: state.anime.episodes || 0,
-    t, d, updated: Date.now()
-  };
-  localStorage.setItem(LS.progress, JSON.stringify(store));
-  $('#progressInfo').textContent = `توقّف عند ${fmt(t)} / ${fmt(d)}`;
-  renderContinue();
-}
-
-function getProgress(id, ep) { return getProgressStore()[`${id}_${ep}`]; }
-
-function saveLast() {
-  if (!state.anime) return;
-  localStorage.setItem(LS.last, JSON.stringify({
-    id: state.anime.id,
-    ep: state.ep,
-    title: { romaji: titleOf(state.anime) },
-    episodes: state.anime.episodes || 0,
-    coverImage: { large: state.anime.coverImage?.large || '' }
-  }));
-}
+function getWatched(id) { try { return new Set(JSON.parse(localStorage.getItem(LS.watched(id))) || []); } catch(e) { return new Set(); } }
+function markWatched(id, ep) { const s = getWatched(id); if (s.has(ep)) return; s.add(ep); localStorage.setItem(LS.watched(id), JSON.stringify([...s])); updateEpButtons(); updatePlayerBar(); }
+function getProgressStore() { try { return JSON.parse(localStorage.getItem(LS.progress)) || {}; } catch(e) { return {}; } }
+function saveLast() { if (state.anime) localStorage.setItem(LS.last, JSON.stringify({ id: state.anime.id, ep: state.ep, title: { romaji: titleOf(state.anime) }, episodes: state.anime.episodes || 0, coverImage: { large: state.anime.coverImage?.large || '' } })); }
 
 function renderContinue() {
-  const items = Object.values(getProgressStore())
-    .filter(v => v.d && v.t > 20 && v.t < v.d * 0.95)
-    .sort((a, b) => b.updated - a.updated)
-    .slice(0, 10);
-  const sec = $('#continueSection');
-  if (!items.length) { sec.hidden = true; return; }
-  sec.hidden = false;
-  $('#continueRow').innerHTML = items.map(v => `
-    <div class="cw-card" data-id="${v.id}" data-ep="${v.ep}">
-      <img src="${esc(v.poster)}" alt="" onerror="this.style.display='none'">
-      <div class="cw-info">
-        <strong>${esc(v.title)}</strong>
-        <span class="muted">الحلقة ${v.ep} — ${Math.round(v.t/v.d*100)}%</span>
-        <div class="cw-bar"><i style="width:${Math.min(100, v.t/v.d*100)}%"></i></div>
-      </div>
-    </div>`).join('');
-  document.querySelectorAll('.cw-card').forEach(el =>
-    el.addEventListener('click', () => {
-      const v = items.find(x => String(x.id) === el.dataset.id && String(x.ep) === el.dataset.ep);
-      if (v) selectAnime({ id: v.id, title: { romaji: v.title }, episodes: v.episodes, coverImage: { large: v.poster } }, v.ep, true);
-    }));
+  const last = JSON.parse(localStorage.getItem(LS.last) || 'null');
+  if (last?.id) selectAnime(last, last.ep || 1, true);
 }
 
 function updatePlayerBar() {
   const total = state.anime?.episodes || 1;
   const watched = state.anime && getWatched(state.anime.id).has(state.ep);
-  const bw = $('#btnWatched');
-  bw.disabled = !!watched;
-  bw.textContent = watched ? '✓ تمت مشاهدتها' : '✓ تعيين كمشاهدة';
-  bw.classList.toggle('done', !!watched);
+  const bw = $('#btnWatched'); bw.disabled = !!watched; bw.textContent = watched ? '✓ تمت المشاهدة' : '✓ تعيين كمشاهدة'; bw.classList.toggle('done', !!watched);
   $('#btnNext').disabled = state.ep >= total;
-  $('#pMeta').textContent = `${state.anime?.episodes || '?'} حلقة — أنت تشاهد: الحلقة ${state.ep}`;
+  $('#pMeta').textContent = `${state.anime?.episodes || '?'} حلقة — الحلقة الحالية: ${state.ep}`;
 }
 $('#btnWatched').addEventListener('click', () => state.anime && markWatched(state.anime.id, state.ep));
 $('#btnNext').addEventListener('click', () => state.ep < (state.anime.episodes || 1) && loadEpisode(state.ep + 1));
-
-window.addEventListener('beforeunload', saveProgress);
-
-window.addEventListener('DOMContentLoaded', () => {
-  renderContinue();
-  try {
-    const last = JSON.parse(localStorage.getItem(LS.last) || 'null');
-    if (last?.id) selectAnime(last, last.ep || 1, true);
-  } catch(e) {}
-});
+window.addEventListener('DOMContentLoaded', () => { setTimeout(renderContinue, 300); });
 </script>
 </body>
 </html>
