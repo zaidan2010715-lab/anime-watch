@@ -8,81 +8,55 @@
 <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@400;500;700;800&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/artplayer@5.2.1/dist/artplayer.css">
 <style>
-:root{
-  --bg:#0b0e14; --surface:#121722; --surface2:#1a2130; --border:#232c3f;
-  --text:#e8ecf4; --muted:#8b94a7;
-  --accent:#7c5cff; --accent2:#00d4ff;
-  --watched:#22c55e;
-  --radius:14px;
-}
-*{margin:0;padding:0;box-sizing:border-box}
-html{scroll-behavior:smooth}
+:root{--bg:#0b0e14; --surface:#121722; --surface2:#1a2130; --border:#232c3f; --text:#e8ecf4; --muted:#8b94a7; --accent:#7c5cff; --accent2:#00d4ff; --watched:#22c55e; --radius:14px;}
+*{margin:0;padding:0;box-sizing:border-box} html{scroll-behavior:smooth}
 body{background:var(--bg);color:var(--text);font-family:'Tajawal',system-ui,sans-serif;min-height:100vh}
-.muted{color:var(--muted)}
-.container{max-width:1200px;margin:0 auto;padding:0 16px}
-
+.muted{color:var(--muted)} .container{max-width:1200px;margin:0 auto;padding:0 16px}
 header{position:sticky;top:0;z-index:50;background:rgba(11,14,20,.85);backdrop-filter:blur(12px);border-bottom:1px solid var(--border)}
 .header-inner{max-width:1200px;margin:0 auto;padding:14px 16px;display:flex;align-items:center;gap:12px}
 .brand{font-size:22px;font-weight:800;background:linear-gradient(90deg,var(--accent),var(--accent2));-webkit-background-clip:text;background-clip:text;color:transparent;white-space:nowrap}
 .header-inner small{color:var(--muted);font-size:12px}
-
-.continue{padding:18px 0 0}
-.continue h3{font-size:16px;margin-bottom:10px}
+.continue{padding:18px 0 0} .continue h3{font-size:16px;margin-bottom:10px}
 #continueRow{display:flex;gap:10px;overflow-x:auto;padding-bottom:8px;scrollbar-width:thin}
 .cw-card{flex:0 0 250px;display:flex;gap:10px;background:var(--surface);border:1px solid var(--border);border-radius:12px;padding:8px;cursor:pointer;transition:border-color .2s}
-.cw-card:hover{border-color:var(--accent)}
-.cw-card img{width:48px;height:64px;object-fit:cover;border-radius:8px;flex-shrink:0}
+.cw-card:hover{border-color:var(--accent)} .cw-card img{width:48px;height:64px;object-fit:cover;border-radius:8px;flex-shrink:0}
 .cw-info{display:flex;flex-direction:column;gap:4px;font-size:12px;min-width:0}
 .cw-info strong{font-size:13px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 .cw-bar{height:3px;background:var(--surface2);border-radius:99px;overflow:hidden;margin-top:auto}
 .cw-bar i{display:block;height:100%;background:linear-gradient(90deg,var(--accent),var(--accent2))}
-
 .player-section{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);padding:16px;margin:18px 0}
 .player-head{display:flex;justify-content:space-between;align-items:flex-start;gap:12px;flex-wrap:wrap;margin-bottom:12px}
-.player-head h2{font-size:19px}
-.player-head p{font-size:13px;margin-top:2px}
+.player-head h2{font-size:19px} .player-head p{font-size:13px;margin-top:2px}
 .player-wrap{position:relative;aspect-ratio:16/9;background:#000;border-radius:12px;overflow:hidden}
-#artplayer{width:100%;height:100%}
-#embedFrame{width:100%;height:100%;border:0}
+#artplayer{width:100%;height:100%} #embedFrame{width:100%;height:100%;border:0}
 .player-bar{display:flex;align-items:center;gap:10px;flex-wrap:wrap;margin:12px 0}
 .btn{background:var(--surface2);border:1px solid var(--border);color:var(--text);font-family:inherit;font-size:13px;font-weight:700;padding:9px 18px;border-radius:99px;cursor:pointer;transition:.2s}
-.btn:hover{border-color:var(--accent)}
-.btn:disabled{opacity:.4;cursor:not-allowed}
+.btn:hover{border-color:var(--accent)} .btn:disabled{opacity:.4;cursor:not-allowed}
 .btn.primary{background:linear-gradient(90deg,var(--accent),var(--accent2));border:0;color:#fff}
 .btn.done{background:rgba(34,197,94,.15);border-color:rgba(34,197,94,.5);color:var(--watched)}
 #progressInfo{font-size:12px;color:var(--muted)}
-
 .episodes{display:grid;grid-template-columns:repeat(auto-fill,minmax(56px,1fr));gap:8px;max-height:270px;overflow-y:auto;padding:4px;scrollbar-width:thin}
 .ep-btn{position:relative;padding:9px 0;background:var(--surface2);border:1px solid var(--border);border-radius:9px;color:var(--text);font-family:inherit;font-size:13px;font-weight:700;cursor:pointer;transition:.15s}
-.ep-btn:hover{border-color:var(--accent)}
-.ep-btn.active{background:linear-gradient(90deg,var(--accent),var(--accent2));border-color:transparent;color:#fff}
+.ep-btn:hover{border-color:var(--accent)} .ep-btn.active{background:linear-gradient(90deg,var(--accent),var(--accent2));border-color:transparent;color:#fff}
 .ep-btn.watched{color:var(--watched);border-color:rgba(34,197,94,.45)}
 .ep-btn.watched::after{content:'✓';position:absolute;top:1px;inset-inline-end:4px;font-size:9px}
-
 .servers{display:flex;gap:8px;flex-wrap:wrap;margin:12px 0}
 .srv{background:var(--surface2);border:1px solid var(--border);color:var(--text);font-family:inherit;font-size:12px;font-weight:700;padding:7px 14px;border-radius:99px;cursor:pointer;transition:.15s}
 .srv small{color:var(--muted);font-weight:400;margin-inline-start:5px}
-.srv:hover{border-color:var(--accent)}
-.srv.active{background:linear-gradient(90deg,var(--accent),var(--accent2));border-color:transparent;color:#fff}
-
+.srv:hover{border-color:var(--accent)} .srv.active{background:linear-gradient(90deg,var(--accent),var(--accent2));border-color:transparent;color:#fff}
 .search-box{display:flex;align-items:center;gap:10px;background:var(--surface);border:1px solid var(--border);border-radius:99px;padding:12px 18px;margin:22px 0 14px;transition:border-color .2s}
-.search-box:focus-within{border-color:var(--accent)}
-.search-box svg{flex-shrink:0;stroke:var(--muted)}
+.search-box:focus-within{border-color:var(--accent)} .search-box svg{flex-shrink:0;stroke:var(--muted)}
 .search-box input{flex:1;background:transparent;border:0;outline:0;color:var(--text);font-family:inherit;font-size:15px}
 .search-box input::placeholder{color:var(--muted)}
 .status{text-align:center;color:var(--muted);padding:30px 0;font-size:14px}
-
 .grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(165px,1fr));gap:16px;padding-bottom:40px}
 .card{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);overflow:hidden;cursor:pointer;transition:transform .2s}
 .card:hover{transform:translateY(-5px);border-color:var(--accent)}
 .card-poster{position:relative;aspect-ratio:2/3;background:var(--surface2)}
 .card-poster img{width:100%;height:100%;object-fit:cover;display:block}
 .badge{position:absolute;font-size:11px;font-weight:700;padding:3px 8px;border-radius:99px;background:rgba(0,0,0,.75);backdrop-filter:blur(4px)}
-.badge.score{top:8px;inset-inline-start:8px;color:#ffd166}
-.badge.eps{bottom:8px;inset-inline-start:8px;color:var(--accent2)}
-.card-body{padding:10px 12px}
-.card-body h3{font-size:14px;font-weight:700;line-height:1.5;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden;min-height:42px}
-
+.badge.score{top:8px;inset-inline-start:8px;color:#ffd166} .badge.eps{bottom:8px;inset-inline-start:8px;color:var(--accent2)}
+.card-body{padding:10px 12px} .card-body h3{font-size:14px;font-weight:700;line-height:1.5;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden;min-height:42px}
 footer{text-align:center;color:var(--muted);font-size:12px;padding:24px 16px;border-top:1px solid var(--border)}
 </style>
 </head>
@@ -91,7 +65,7 @@ footer{text-align:center;color:var(--muted);font-size:12px;padding:24px 16px;bor
 <header>
   <div class="header-inner">
     <span class="brand">أنمي ووتش</span>
-    <small>الإصدار النهائي المستقر</small>
+    <small>الإصدار النهائي المستقر (MAL Sync)</small>
   </div>
 </header>
 
@@ -111,7 +85,6 @@ footer{text-align:center;color:var(--muted);font-size:12px;padding:24px 16px;bor
 
     <div class="player-wrap" dir="ltr">
       <div id="artplayer"></div>
-      <!-- تم إزالة الـ Sandbox بالكامل لتجنب أخطاء المشغلات الخارجية -->
       <iframe id="embedFrame" hidden allowfullscreen 
               allow="autoplay; fullscreen; encrypted-media; picture-in-picture" referrerpolicy="no-referrer"></iframe>
     </div>
@@ -127,13 +100,13 @@ footer{text-align:center;color:var(--muted);font-size:12px;padding:24px 16px;bor
 
   <div class="search-box">
     <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.3-4.3"/></svg>
-    <input id="searchInput" type="text" placeholder="ابحث عن أنمي (مثال: One Piece)..." autocomplete="off">
+    <input id="searchInput" type="text" placeholder="ابحث عن أنمي (مثال: One Punch Man)..." autocomplete="off">
   </div>
   <div id="status" class="status" hidden></div>
   <div id="grid" class="grid"></div>
 </div>
 
-<footer>تحديث المشغل والبحث المباشر — جميع الحقوق محفوظة لمتصفحك</footer>
+<footer>يعمل مباشرة من المتصفح — جميع الحقوق محفوظة</footer>
 
 <script src="https://cdn.jsdelivr.net/npm/artplayer@5.2.1/dist/artplayer.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/hls.js@1.5.13/dist/hls.min.js"></script>
@@ -147,11 +120,12 @@ const LS = { watched: id => `aw_watched_${id}`, progress: 'aw_progress', last: '
 let state = { anime: null, ep: null, data: null, serverIndex: 0 };
 let art = null, hls = null, lastSave = 0;
 
-/* --- دالة جلب السيرفرات --- */
+/* --- دالة جلب السيرفرات (تمرير معرّف MAL) --- */
 async function resolveStream(anime, ep) {
   const title = encodeURIComponent(titleOf(anime));
+  const mal = anime.idMal || anime.id; // التعديل السري هنا
   try {
-    const r = await fetch(`/api/episode?id=${anime.id}&ep=${ep}&title=${title}`);
+    const r = await fetch(`/api/episode?id=${anime.id}&mal=${mal}&ep=${ep}&title=${title}`);
     if (r.ok) return await r.json();
   } catch(e) {}
   return { servers: [], subtitles: [] };
@@ -185,7 +159,7 @@ function selectServer(i, soft = false) {
   }
 }
 
-/* --- دالة البحث المباشر السريعة جدًا --- */
+/* --- دالة البحث (إضافة idMal) --- */
 let debounce;
 $('#searchInput').addEventListener('input', e => {
   clearTimeout(debounce);
@@ -196,13 +170,13 @@ $('#searchInput').addEventListener('input', e => {
 async function runSearch(q) {
   const status = $('#status'), grid = $('#grid');
   if (!q) { status.hidden = true; grid.innerHTML = ''; return; }
-  status.hidden = false; status.textContent = 'جارٍ البحث سريعاً...'; grid.innerHTML = '';
+  status.hidden = false; status.textContent = 'جارٍ البحث...'; grid.innerHTML = '';
 
   const query = `
     query ($search: String) {
       Page(page: 1, perPage: 15) {
         media(search: $search, type: ANIME, sort: POPULARITY_DESC) {
-          id title { romaji english } episodes coverImage { large } averageScore
+          id idMal title { romaji english } episodes coverImage { large } averageScore
         }
       }
     }`;
@@ -235,7 +209,6 @@ function renderGrid(list) {
   document.querySelectorAll('.card').forEach((el, i) => el.addEventListener('click', () => selectAnime(list[i])));
 }
 
-/* --- دالة الحلقات --- */
 async function selectAnime(anime, ep = 1, soft = false) {
   state.anime = anime;
   $('#playerSection').hidden = false;
@@ -293,8 +266,7 @@ function destroyPlayer() { if (art) { try{art.destroy(true);}catch(e){} art=null
 
 function getWatched(id) { try { return new Set(JSON.parse(localStorage.getItem(LS.watched(id))) || []); } catch(e) { return new Set(); } }
 function markWatched(id, ep) { const s = getWatched(id); if (s.has(ep)) return; s.add(ep); localStorage.setItem(LS.watched(id), JSON.stringify([...s])); updateEpButtons(); updatePlayerBar(); }
-function getProgressStore() { try { return JSON.parse(localStorage.getItem(LS.progress)) || {}; } catch(e) { return {}; } }
-function saveLast() { if (state.anime) localStorage.setItem(LS.last, JSON.stringify({ id: state.anime.id, ep: state.ep, title: { romaji: titleOf(state.anime) }, episodes: state.anime.episodes || 0, coverImage: { large: state.anime.coverImage?.large || '' } })); }
+function saveLast() { if (state.anime) localStorage.setItem(LS.last, JSON.stringify({ id: state.anime.id, idMal: state.anime.idMal, ep: state.ep, title: { romaji: titleOf(state.anime) }, episodes: state.anime.episodes || 0, coverImage: { large: state.anime.coverImage?.large || '' } })); }
 
 function renderContinue() {
   const last = JSON.parse(localStorage.getItem(LS.last) || 'null');
